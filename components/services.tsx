@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Check } from "lucide-react"
+import { scrollToSection } from "@/lib/scroll"
 
 const packages = [
   {
@@ -46,28 +47,28 @@ const packages = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background">
+    <section id="services" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background w-full max-w-full overflow-x-hidden">
       <div className="container">
         <motion.div
-          className="mb-16 text-center"
+          className="mb-12 sm:mb-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-50px" }}
         >
           <h2 className="section-title mb-6">Услуги и цены</h2>
           <p className="section-subtitle">Пакеты, адаптированные под ваш формат</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              viewport={{ once: true }}
-              className={`relative rounded-lg p-6 sm:p-8 border transition-all duration-300 ${
+              transition={{ duration: 0.4, delay: idx * 0.05, ease: "easeOut" }}
+              viewport={{ once: true, margin: "-50px" }}
+              className={`relative rounded-lg p-5 sm:p-6 md:p-8 border transition-all duration-300 ${
                 pkg.featured
                   ? "bg-gradient-to-b from-accent/10 to-background border-accent sm:col-span-2 lg:col-span-1 lg:scale-105 shadow-xl"
                   : "bg-card border-border hover:border-accent/50"
@@ -100,16 +101,19 @@ export default function Services() {
                 <div className="text-3xl sm:text-4xl font-bold text-accent mb-2">от {pkg.price}₽</div>
               </div>
 
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                 {pkg.features.map((feature, fIdx) => (
-                  <li key={fIdx} className="flex items-start gap-3">
-                    <Check size={18} className="text-accent mt-1 flex-shrink-0" />
-                    <span className="text-sm text-muted-foreground">{feature}</span>
+                  <li key={fIdx} className="flex items-start gap-2.5 sm:gap-3">
+                    <Check size={16} className="sm:w-[18px] sm:h-[18px] text-accent mt-0.5 sm:mt-1 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              <button className={`w-full btn ${pkg.featured ? "btn-filled" : "btn-outline"}`}>
+              <button 
+                onClick={() => scrollToSection("#calculator")}
+                className={`w-full btn ${pkg.featured ? "btn-filled" : "btn-outline"}`}
+              >
                 Узнать подробности
               </button>
             </motion.div>

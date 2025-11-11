@@ -1,0 +1,228 @@
+{
+  "classic": [
+    {
+      "id": 1,
+      "name": "ВОСТОЧНЫЙ БРИЗ",
+      "description": "Грейпфрут, лайм, ледяная мята, цитрусовый чай",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Darkside",
+          "flavor": "Grapefruit"
+        },
+        {
+          "brand": "Musthave",
+          "flavor": "Citrus Tea"
+        },
+        {
+          "brand": "Starline",
+          "flavor": "Ice Mint"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "ЛЁГКИЙ ЗАКАТ",
+      "description": "Манго, персик, мята, лёгкая свежесть",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Sebero",
+          "flavor": "Mango"
+        },
+        {
+          "brand": "Starline",
+          "flavor": "Peach"
+        },
+        {
+          "brand": "Bonche",
+          "flavor": "Mint"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "ЯГОДНЫЙ ШТОРМ",
+      "description": "Малина, черника, вишня",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Darkside",
+          "flavor": "Wildberry"
+        },
+        {
+          "brand": "Musthave",
+          "flavor": "Raspberry"
+        },
+        {
+          "brand": "Sebero",
+          "flavor": "Cherry"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "CITRUS ENERGY",
+      "description": "Грейпфрут, лимон, энергетик",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Element",
+          "flavor": "Lemon"
+        },
+        {
+          "brand": "Black Burn",
+          "flavor": "Energy"
+        },
+        {
+          "brand": "Musthave",
+          "flavor": "Grapefruit"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "ICE JUNGLE",
+      "description": "Дыня, киви, мята",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Sebero",
+          "flavor": "Melon"
+        },
+        {
+          "brand": "Darkside",
+          "flavor": "Kiwi"
+        },
+        {
+          "brand": "Starline",
+          "flavor": "Menthol"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "VANILLA SKY",
+      "description": "Ваниль, груша, сливки",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Bonche",
+          "flavor": "Vanilla"
+        },
+        {
+          "brand": "Musthave",
+          "flavor": "Cream"
+        },
+        {
+          "brand": "Sebero",
+          "flavor": "Pear"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "CHOCO BERRY",
+      "description": "Шоколад, ягоды, мороженое",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Darkside",
+          "flavor": "Berries"
+        },
+        {
+          "brand": "Black Burn",
+          "flavor": "Chocolate"
+        },
+        {
+          "brand": "Element",
+          "flavor": "Ice Cream"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "ГРАНАТОВЫЙ НЕГРОНИ",
+      "description": "Гранат, базилик, грейпфрут",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Darkside",
+          "flavor": "Grapefruit"
+        },
+        {
+          "brand": "Musthave",
+          "flavor": "Basil"
+        },
+        {
+          "brand": "Sebero",
+          "flavor": "Pomegranate"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "НОЧНОЙ ЛАУНДЖ",
+      "description": "Кофе, карамель, ваниль",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Bonche",
+          "flavor": "Coffee"
+        },
+        {
+          "brand": "Element",
+          "flavor": "Caramel"
+        },
+        {
+          "brand": "Darkside",
+          "flavor": "Vanilla"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "МАРАКУЙЯ ФРОСТ",
+      "description": "Маракуйя, ананас, ледяная свежесть",
+      "image": null,
+      "tobaccos": [
+        {
+          "brand": "Sebero",
+          "flavor": "Passion Fruit"
+        },
+        {
+          "brand": "Musthave",
+          "flavor": "Mint"
+        },
+        {
+          "brand": "Black Burn",
+          "flavor": "Pineapple"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "яячс",
+      "description": "ячсячс",
+      "image": "/uploads/1762882527732-photo_2025-10-18_08-01-31.jpg",
+      "tobaccos": [
+        {
+          "brand": "ячс",
+          "flavor": "ячс"
+        },
+        {
+          "brand": "ячс",
+          "flavor": "ячс"
+        },
+        {
+          "brand": "ячс",
+          "flavor": "ячс"
+        },
+        {
+          "brand": "ячс",
+          "flavor": "ячс"
+        }
+      ]
+    }
+  ]
+}

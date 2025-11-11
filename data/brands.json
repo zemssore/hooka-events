@@ -1,0 +1,87 @@
+[
+  {
+    "id": 1,
+    "name": "Райффайзен Банк",
+    "logo": "/brands/raiffeisen.svg"
+  },
+  {
+    "id": 2,
+    "name": "Сбербанк",
+    "logo": "/brands/sberbank.svg"
+  },
+  {
+    "id": 3,
+    "name": "Яндекс",
+    "logo": "/brands/yandex.svg"
+  },
+  {
+    "id": 4,
+    "name": "Leroy Merlin",
+    "logo": "/brands/leroy-merlin.svg"
+  },
+  {
+    "id": 5,
+    "name": "Киви",
+    "logo": "/brands/qiwi.svg"
+  },
+  {
+    "id": 6,
+    "name": "Тинькофф",
+    "logo": "/brands/tinkoff.svg"
+  },
+  {
+    "id": 7,
+    "name": "ВКонтакте",
+    "logo": "/brands/vk.svg"
+  },
+  {
+    "id": 8,
+    "name": "ВТБ",
+    "logo": "/brands/vtb.svg"
+  },
+  {
+    "id": 9,
+    "name": "Альфа-Банк",
+    "logo": "/brands/alfa-bank.svg"
+  },
+  {
+    "id": 10,
+    "name": "МТС",
+    "logo": "/brands/mts.svg"
+  },
+  {
+    "id": 11,
+    "name": "Мегафон",
+    "logo": "/brands/megafon.svg"
+  },
+  {
+    "id": 12,
+    "name": "Tele2",
+    "logo": "/brands/tele2.svg"
+  },
+  {
+    "id": 13,
+    "name": "Ozon",
+    "logo": "/brands/ozon.svg"
+  },
+  {
+    "id": 14,
+    "name": "Wildberries",
+    "logo": "/brands/wildberries.svg"
+  },
+  {
+    "id": 15,
+    "name": "Ланит",
+    "logo": "/brands/lanit.svg"
+  },
+  {
+    "id": 16,
+    "name": "тинькофф",
+    "logo": "/uploads/1762883077816-png-clipart-tinkoff-bank-russia-tcs-group-holding-nasdaq-general-insurance-text-logo.png"
+  },
+  {
+    "id": 17,
+    "name": "сс",
+    "logo": "/uploads/1762883178230-AQAKEHVTBtpOh6ntEFh-WdmoOXd9WM2Ux0te0WjM4tWTcQVKjXd7lduDY9Fg_S0Zua44v6W22P8UeemQUINnCUgOOds.jpg"
+  }
+]

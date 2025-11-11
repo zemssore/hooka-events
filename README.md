@@ -113,9 +113,15 @@ Create a `.env.local` file in the root directory:
 # API Configuration
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 
+# Admin Panel Authentication
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_secure_password_here
+
 # Email/Notifications (if using external service)
 # SENDGRID_API_KEY=your_key_here
 \`\`\`
+
+**Important:** Change `ADMIN_USERNAME` and `ADMIN_PASSWORD` to secure values before deploying to production!
 
 ## 📦 Build & Deployment
 
@@ -240,6 +246,61 @@ Edit `components/3d-hookah.tsx` to customize:
 2. Commit changes (`git commit -m 'Add amazing feature'`)
 3. Push to branch (`git push origin feature/amazing-feature`)
 4. Open a Pull Request
+
+## 🛠️ Admin Panel
+
+The project includes an admin panel for managing mixes and staff members.
+
+### Access Admin Panel
+
+Navigate to `/admin` to access the admin panel:
+- **URL**: `http://localhost:3000/admin`
+- **Login**: You will be redirected to `/admin/login` if not authenticated
+- **Default Credentials** (change in `.env.local`):
+  - Username: `admin`
+  - Password: `admin123`
+- **Features**:
+  - Add new mixes with images and tobacco combinations
+  - Add new staff members with photos
+  - Delete existing items
+  - Upload images (JPEG, PNG, WebP, max 5MB)
+  - Secure authentication with session management
+
+### Managing Mixes
+
+1. Go to the "Миксы" tab
+2. Fill in the form:
+   - **Name**: Mix name (required)
+   - **Description**: Mix description (required)
+   - **Photo**: Upload an image (optional)
+   - **Табаки**: Add tobacco combinations (brand and flavor)
+3. Click "Добавить микс" to save
+
+### Managing Staff
+
+1. Go to the "Мастера" tab
+2. Fill in the form:
+   - **Имя**: Staff member name (required)
+   - **Роль**: Role/position (required)
+   - **Фото**: Upload a photo (optional, defaults to placeholder)
+3. Click "Добавить мастера" to save
+
+### Data Storage
+
+- Mixes are stored in `data/mixes.json`
+- Staff members are stored in `data/staff.json`
+- Uploaded images are stored in `public/uploads/`
+- All data is automatically synced with the frontend components
+
+### API Endpoints
+
+- `GET /api/mixes` - Get all mixes
+- `POST /api/mixes` - Add a new mix
+- `DELETE /api/mixes?id={id}` - Delete a mix
+- `GET /api/staff` - Get all staff members
+- `POST /api/staff` - Add a new staff member
+- `DELETE /api/staff?id={id}` - Delete a staff member
+- `POST /api/upload` - Upload an image file
 
 ## 📞 Support
 

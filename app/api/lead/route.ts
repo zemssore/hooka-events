@@ -5,8 +5,8 @@ export async function POST(request: NextRequest) {
     const data = await request.json()
 
     // Валидация
-    if (!data.name || !data.phone || !data.message) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    if (!data.name || !data.phone) {
+      return NextResponse.json({ error: "Имя и телефон обязательны" }, { status: 400 })
     }
 
     // Здесь можно добавить отправку в Telegram bot, email или другой сервис

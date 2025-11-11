@@ -1,70 +1,71 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
-const galleryItems = [
-  { id: 1, category: "corporate", title: "Корпоратив", image: "/corporate-hookah-event.jpg" },
-  { id: 2, category: "wedding", title: "Свадьба", image: "/wedding-hookah-lounge.jpg" },
-  { id: 3, category: "party", title: "Вечеринка", image: "/party-hookah-setup.jpg" },
-  { id: 4, category: "corporate", title: "Конференция", image: "/conference-hookah-catering.jpg" },
-  { id: 5, category: "wedding", title: "Приватный банкет", image: "/private-hookah-event.jpg" },
-  { id: 6, category: "shooting", title: "Съёмка", image: "/film-production-hookah.jpg" },
-]
-
-const categories = [
-  { id: "all", label: "Все" },
-  { id: "corporate", label: "Корпоратив" },
-  { id: "wedding", label: "Свадьба" },
-  { id: "party", label: "Вечеринка" },
-  { id: "shooting", label: "Съёмка" },
-]
+interface CaseItem {
+  id: number
+  title: string
+  image: string
+  category?: string
+}
 
 export default function Gallery() {
-  const [activeCategory, setActiveCategory] = useState("all")
+  const [galleryItems, setGalleryItems] = useState<CaseItem[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const filtered =
-    activeCategory === "all" ? galleryItems : galleryItems.filter((item) => item.category === activeCategory)
+  useEffect(() => {
+    loadCases()
+  }, [])
+
+  const loadCases = async () => {
+    try {
+      const res = await fetch("/api/cases")
+      const data = await res.json()
+      setGalleryItems(data || [])
+    } catch (error) {
+      console.error("Error loading cases:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <section id="gallery" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background w-full max-w-full overflow-x-hidden">
+        <div className="container">
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Загрузка кейсов...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (galleryItems.length === 0) {
+    return null
+  }
 
   return (
-    <section id="gallery" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background">
+    <section id="gallery" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background w-full max-w-full overflow-x-hidden">
       <div className="container">
         <motion.div
           className="mb-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-50px" }}
         >
-          <h2 className="section-title mb-6">Фото и кейсы</h2>
-          <p className="section-subtitle">Примеры наших лучших работ</p>
+          <h2 className="section-title mb-6">Кейсы</h2>
+          <p className="section-subtitle">Примеры наших работ</p>
         </motion.div>
 
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-8 sm:mb-12 px-4">
-          {categories.map((cat) => (
-            <motion.button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`px-4 sm:px-6 py-2 rounded-sm text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 ${
-                activeCategory === cat.id
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-card text-foreground border border-border hover:border-accent/50"
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {cat.label}
-            </motion.button>
-          ))}
-        </div>
-
         {/* Gallery - Horizontal Slider on Mobile, Grid on Desktop */}
-        <div className="md:hidden -mx-4 px-4">
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="md:hidden w-full max-w-full overflow-hidden">
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
             <AnimatePresence mode="wait">
-              {filtered.map((item) => (
+              {galleryItems.map((item) => (
                 <motion.div
                   key={item.id}
                   layoutId={item.id}
@@ -72,7 +73,7 @@ export default function Gallery() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
-                  className="group relative flex-shrink-0 w-[280px] h-[200px] rounded-lg overflow-hidden bg-card border border-border hover:border-accent/50 cursor-pointer snap-start"
+                  className="group relative flex-shrink-0 w-[calc(100vw-2rem)] sm:w-[280px] h-[200px] rounded-lg overflow-hidden bg-card border border-border hover:border-accent/50 cursor-pointer snap-start"
                   whileHover={{ y: -4 }}
                 >
                   <Image
@@ -93,7 +94,7 @@ export default function Gallery() {
         {/* Gallery Grid - Desktop */}
         <motion.div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" layout>
           <AnimatePresence mode="wait">
-            {filtered.map((item) => (
+            {galleryItems.map((item) => (
               <motion.div
                 key={item.id}
                 layoutId={item.id}

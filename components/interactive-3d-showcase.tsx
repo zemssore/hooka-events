@@ -11,14 +11,14 @@ export default function Interactive3DShowcase() {
   const [show3D, setShow3D] = useState(false)
 
   return (
-    <section id="interactive-showcase" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background border-y border-border">
+    <section id="interactive-showcase" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background border-y border-border w-full max-w-full overflow-x-hidden">
       <div className="container">
         <motion.div
           className="mb-16 text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-50px" }}
         >
           <h2 className="section-title mb-6">Интерактивная демонстрация</h2>
           <p className="section-subtitle">Посмотрите наше премиальное оборудование в 3D</p>
@@ -30,8 +30,8 @@ export default function Interactive3DShowcase() {
             className="space-y-5 sm:space-y-6"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-50px" }}
           >
             <div>
               <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">Современное оборудование</h3>
@@ -51,8 +51,8 @@ export default function Interactive3DShowcase() {
                   className="p-4 rounded-lg bg-card border border-border/50"
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: idx * 0.05, ease: "easeOut" }}
+                  viewport={{ once: true, margin: "-50px" }}
                 >
                   <p className="font-semibold text-accent mb-1">{item.title}</p>
                   <p className="text-sm text-muted-foreground">{item.desc}</p>
@@ -75,8 +75,8 @@ export default function Interactive3DShowcase() {
             className="relative h-64 sm:h-80 md:h-96 rounded-lg bg-card border border-border/50 overflow-hidden"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-50px" }}
           >
             {show3D ? (
               <div className="w-full h-full">
@@ -90,7 +90,7 @@ export default function Interactive3DShowcase() {
                   transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
                 >
                   <div className="text-6xl mb-4">🎨</div>
-                  <p className="text-muted-foreground">Нажмите кнопку выше, чтобы увидеть 3D</p>
+                  <p className="text-muted-foreground">Нажмите кнопку, чтобы увидеть 3D модель</p>
                 </motion.div>
               </div>
             )}

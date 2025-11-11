@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Premium Classic",
+    "description": "Классический кальян премиум-класса с традиционным дизайном. Идеален для корпоративных мероприятий и свадеб.",
+    "image": "/corporate-hookah-event.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Modern Design",
+    "description": "Современный кальян с инновационным дизайном и улучшенной тягой. Подходит для вечеринок и частных мероприятий.",
+    "image": "/party-hookah-setup.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Luxury Edition",
+    "description": "Эксклюзивный кальян люксового класса с ручной отделкой. Создаёт неповторимую атмосферу на VIP-событиях.",
+    "image": "/wedding-hookah-lounge.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Portable Pro",
+    "description": "Компактный профессиональный кальян для выездных мероприятий. Легко транспортируется и быстро устанавливается.",
+    "image": "/conference-hookah-catering.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Artisan Collection",
+    "description": "Кальян из коллекции мастеров с уникальным дизайном. Каждое изделие создано вручную и имеет свой характер.",
+    "image": "/private-hookah-event.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Signature Series",
+    "description": "Фирменная серия кальянов Hookah Events. Оптимальное сочетание качества, дизайна и функциональности.",
+    "image": "/film-production-hookah.jpg"
+  }
+]

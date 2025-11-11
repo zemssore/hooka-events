@@ -2,29 +2,49 @@
 
 import { useEffect, useRef } from "react"
 import { motion } from "framer-motion"
+import { scrollToSection } from "@/lib/scroll"
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let rafId: number
+    let lastX = 0
+    let lastY = 0
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current || !textRef.current) return
+
       const { clientX, clientY } = e
       const { width, height, left, top } = containerRef.current.getBoundingClientRect()
 
       const moveX = (clientX - left - width / 2) * 0.02
       const moveY = (clientY - top - height / 2) * 0.02
 
-      textRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`
+      // Используем requestAnimationFrame для плавности
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
+
+      rafId = requestAnimationFrame(() => {
+        if (textRef.current) {
+          textRef.current.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`
+        }
+      })
     }
 
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mousemove", handleMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
+    }
   }, [])
 
   return (
-    <section className="relative w-full min-h-screen pt-16 sm:pt-20 pb-8 sm:pb-0 flex items-center justify-center overflow-hidden bg-background">
+    <section className="relative w-full max-w-full min-h-screen pt-16 sm:pt-20 pb-8 sm:pb-0 flex items-center justify-center overflow-hidden bg-background">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -39,15 +59,16 @@ export default function Hero() {
         <motion.div
           ref={textRef}
           className="text-center transition-transform duration-200"
+          style={{ willChange: 'transform' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
           <motion.h1
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground mb-4 sm:mb-6 tracking-tighter px-4"
             initial={{ opacity: 0, letterSpacing: "0.1em" }}
             animate={{ opacity: 1, letterSpacing: "0" }}
-            transition={{ duration: 1.5, delay: 0.3 }}
+            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
           >
             HOOKAH EVENTS
           </motion.h1>
@@ -56,7 +77,7 @@ export default function Hero() {
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-accent mb-3 sm:mb-4 font-light tracking-wide px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
           >
             Кальянный кейтеринг на мероприятия в Москве и области
           </motion.p>
@@ -74,11 +95,25 @@ export default function Hero() {
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4 w-full sm:w-auto"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1.2 }}
+            transition={{ duration: 0.8, delay: 1.2, ease: "easeOut" }}
           >
-            <button className="btn btn-filled w-full sm:w-auto text-sm sm:text-base">Рассчитать под свой формат</button>
-            <a href="https://tg.me/hookahevents" target="_blank" rel="noopener noreferrer" className="btn btn-outline w-full sm:w-auto text-sm sm:text-base">
-              Написать в Telegram
+            <a 
+              href="#calculator"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToSection("#calculator")
+              }}
+              className="btn btn-filled w-full sm:w-auto text-sm sm:text-base inline-block text-center"
+            >
+              Рассчитать под свой формат
+            </a>
+            <a 
+              href="https://wa.me/79035299542" 
+              target="_blank"
+              rel="noopener noreferrer" 
+              className="btn btn-outline w-full sm:w-auto text-sm sm:text-base"
+            >
+              Написать менеджеру
             </a>
           </motion.div>
 
@@ -86,13 +121,13 @@ export default function Hero() {
             className="text-xs sm:text-sm text-muted-foreground mt-6 sm:mt-8 tracking-wide px-4 text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.4 }}
+            transition={{ duration: 0.8, delay: 1.4, ease: "easeOut" }}
           >
             <span className="block sm:inline">Премиум-оборудование</span>
             <span className="hidden sm:inline"> | </span>
             <span className="block sm:inline">Обслуживание под ключ</span>
             <span className="hidden sm:inline"> | </span>
-            <span className="block sm:inline">Работаем под вашим брендом</span>
+            <span className="block sm:inline">Лучшие цены</span>
           </motion.p>
         </motion.div>
       </div>

@@ -1,27 +1,66 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { promises as fs } from "fs"
+import path from "path"
+
+const reviewsFilePath = path.join(process.cwd(), "data", "reviews.json")
+
+export async function GET() {
+  try {
+    const fileContents = await fs.readFile(reviewsFilePath, "utf8")
+    const reviews = JSON.parse(fileContents)
+    
+    // Возвращаем только одобренные отзывы
+    const approvedReviews = reviews.filter((review: any) => review.status === "approved")
+    
+    return NextResponse.json(approvedReviews, { status: 200 })
+  } catch (error) {
+    console.error("Error reading reviews:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
     // Валидация
-    if (!data.name || !data.company || !data.text || !data.rating) {
+    if (!data.name || !data.text || !data.rating) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    // Здесь можно сохранить в БД или отправить на модерацию
+    // Читаем существующие отзывы
+    const fileContents = await fs.readFile(reviewsFilePath, "utf8")
+    const reviews = JSON.parse(fileContents)
+
+    // Создаем новый отзыв со статусом "pending"
+    const newReview = {
+      id: Math.max(...reviews.map((r: any) => r.id), 0) + 1,
+      name: data.name,
+      company: "", // Оставляем пустым для совместимости со старыми данными
+      rating: data.rating,
+      text: data.text,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    }
+
+    // Добавляем новый отзыв
+    reviews.push(newReview)
+
+    // Сохраняем обратно в файл
+    await fs.writeFile(reviewsFilePath, JSON.stringify(reviews, null, 2), "utf8")
+
+    // Отправляем уведомление в Telegram (если настроено)
     const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
     const telegramChatId = process.env.TELEGRAM_CHAT_ID
 
     if (telegramBotToken && telegramChatId) {
       const stars = "⭐".repeat(data.rating)
       const message = `
-📝 <b>Новый отзыв</b>
+📝 <b>Новый отзыв на модерацию</b>
 
 ${stars}
 
 👤 <b>Автор:</b> ${data.name}
-🏢 <b>Компания:</b> ${data.company}
 💬 <b>Отзыв:</b>
 ${data.text}
 

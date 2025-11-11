@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { scrollToSection, handleAnchorClick } from "@/lib/scroll"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -22,16 +23,24 @@ export default function Navigation() {
 
   const links = [
     { href: "#about", label: "О нас" },
-    { href: "#gallery", label: "Портфолио" },
+    { href: "#advantages", label: "Кальяны" },
     { href: "#menu", label: "Миксы" },
-    { href: "#services", label: "Услуги" },
+    { href: "#staff", label: "Мастера" },
+    { href: "#partners", label: "Партнерам" },
     { href: "#contacts", label: "Контакты" },
   ]
+
+  const handleLinkClick = (href: string) => {
+    if (href.startsWith("#")) {
+      scrollToSection(href)
+      setIsOpen(false)
+    }
+  }
 
   return (
     <>
       <header 
-        className={`fixed top-0 left-0 right-0 bg-background border-b border-border shadow-sm transition-opacity duration-300 lg:z-[9999] ${
+        className={`fixed top-0 left-0 right-0 bg-background border-b border-border shadow-sm transition-opacity duration-300 lg:z-[9999] w-full max-w-full ${
           isOpen ? 'opacity-0 pointer-events-none z-10 lg:opacity-100 lg:pointer-events-auto' : 'opacity-100 z-[9999]'
         }`}
         style={{ 
@@ -52,7 +61,8 @@ export default function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-xs xl:text-sm uppercase tracking-wider text-foreground/70 hover:text-accent transition-colors"
+                onClick={(e) => handleAnchorClick(e, link.href)}
+                className="text-xs xl:text-sm uppercase tracking-wider text-foreground/70 hover:text-accent transition-colors cursor-pointer"
               >
                 {link.label}
               </a>
@@ -61,18 +71,21 @@ export default function Navigation() {
 
           <div className="hidden lg:flex gap-3 xl:gap-4">
             <a
-              href="https://wa.me/79991234567"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="tel:+79035299542"
               className="btn btn-outline text-xs px-3 xl:px-6"
             >
-              WhatsApp
+              8 903 529 9542
             </a>
-            <button className="btn btn-filled text-xs px-3 xl:px-6">Рассчитать</button>
+            <button 
+              onClick={() => scrollToSection("#calculator")}
+              className="btn btn-filled text-xs px-3 xl:px-6"
+            >
+              Рассчитать
+            </button>
           </div>
 
           {/* Mobile/Tablet Menu Button */}
-          <button className="lg:hidden p-2 -mr-2" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
+          <button className="lg:hidden p-2" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
             {isOpen ? <X size={24} className="text-foreground" /> : <Menu size={24} className="text-foreground" />}
           </button>
         </nav>
@@ -112,7 +125,7 @@ export default function Navigation() {
                   </Link>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-2 -mr-2 flex-shrink-0"
+                    className="p-2 flex-shrink-0"
                     aria-label="Close menu"
                   >
                     <X size={24} className="text-foreground" />
@@ -128,8 +141,11 @@ export default function Navigation() {
                         <a
                           key={link.href}
                           href={link.href}
-                          className="text-sm sm:text-base uppercase tracking-wider text-foreground hover:text-accent transition-colors py-3.5 sm:py-4 border-b border-border/30 last:border-b-0 text-left"
-                          onClick={() => setIsOpen(false)}
+                          className="text-sm sm:text-base uppercase tracking-wider text-foreground hover:text-accent transition-colors py-3.5 sm:py-4 border-b border-border/30 last:border-b-0 text-left cursor-pointer"
+                          onClick={(e) => {
+                            handleAnchorClick(e, link.href)
+                            setIsOpen(false)
+                          }}
                         >
                           {link.label}
                         </a>
@@ -140,28 +156,29 @@ export default function Navigation() {
                   {/* Actions */}
                   <div className="px-5 sm:px-6 pb-5 sm:pb-6 border-t border-border/50 pt-5 sm:pt-6 space-y-3">
                     <a
-                      href="https://wa.me/79991234567"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="tel:+79035299542"
                       className="btn btn-outline w-full text-center text-sm sm:text-base block"
                       onClick={() => setIsOpen(false)}
                     >
-                      WhatsApp
+                      8 903 529 9542
                     </a>
                     <button
                       className="btn btn-filled w-full text-center text-sm sm:text-base block"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => {
+                        scrollToSection("#calculator")
+                        setIsOpen(false)
+                      }}
                     >
                       Рассчитать
                     </button>
                     <a
-                      href="https://tg.me/hookahevents"
+                      href="https://wa.me/79035299542"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-outline w-full text-center text-sm sm:text-base block"
                       onClick={() => setIsOpen(false)}
                     >
-                      Написать в Telegram
+                      Написать менеджеру
                     </a>
                   </div>
 

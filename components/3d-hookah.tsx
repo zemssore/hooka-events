@@ -1,62 +1,32 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
 export default function ThreeDHookah() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!containerRef.current) return
 
     // Scene setup
     const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const width = containerRef.current.clientWidth
+    const height = containerRef.current.clientHeight
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
 
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setSize(width, height)
+    // Ограничиваем pixel ratio для лучшей производительности
+    const pixelRatio = Math.min(window.devicePixelRatio, 2)
+    renderer.setPixelRatio(pixelRatio)
+    renderer.shadowMap.enabled = false // Отключаем тени для производительности
     containerRef.current.appendChild(renderer.domElement)
 
     camera.position.z = 5
-
-    // Create hookah components
-    const group = new THREE.Group()
-
-    // Base
-    const baseGeometry = new THREE.CylinderGeometry(1.5, 1.8, 0.4, 32)
-    const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x8b7355, metalness: 0.3, roughness: 0.6 })
-    const base = new THREE.Mesh(baseGeometry, baseMaterial)
-    group.add(base)
-
-    // Stem
-    const stemGeometry = new THREE.CylinderGeometry(0.15, 0.15, 3, 16)
-    const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.8, roughness: 0.2 })
-    const stem = new THREE.Mesh(stemGeometry, stemMaterial)
-    stem.position.y = 1.8
-    group.add(stem)
-
-    // Bowl
-    const bowlGeometry = new THREE.SphereGeometry(0.5, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.6)
-    const bowlMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.6, roughness: 0.4 })
-    const bowl = new THREE.Mesh(bowlGeometry, bowlMaterial)
-    bowl.position.y = 3.3
-    group.add(bowl)
-
-    // Hose connections
-    const hoseGeometry = new THREE.CylinderGeometry(0.08, 0.08, 2, 16)
-    const hoseMaterial = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.5, roughness: 0.5 })
-
-    for (let i = 0; i < 3; i++) {
-      const hose = new THREE.Mesh(hoseGeometry, hoseMaterial)
-      const angle = (i * Math.PI * 2) / 3
-      hose.position.x = Math.cos(angle) * 1.2
-      hose.position.z = Math.sin(angle) * 1.2
-      hose.position.y = 0.5
-      hose.rotation.z = 0.4
-      group.add(hose)
-    }
-
-    scene.add(group)
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
@@ -70,31 +40,85 @@ export default function ThreeDHookah() {
     pointLight.position.set(-5, 3, 3)
     scene.add(pointLight)
 
-    // Animation loop
+    // Load GLTF model
+    const loader = new GLTFLoader()
+    let model: THREE.Group | null = null
     let animationId: number
-    const animate = () => {
-      animationId = requestAnimationFrame(animate)
 
-      group.rotation.y += 0.005
-      group.rotation.x = Math.sin(Date.now() * 0.0003) * 0.1
+    loader.load(
+      "/models/hookah/scene.gltf",
+      (gltf) => {
+        model = gltf.scene
+        scene.add(model)
 
-      renderer.render(scene, camera)
-    }
+        // Center and scale the model
+        const box = new THREE.Box3().setFromObject(model)
+        const center = box.getCenter(new THREE.Vector3())
+        const size = box.getSize(new THREE.Vector3())
 
-    animate()
+        // Calculate scale to fit the view
+        const maxDim = Math.max(size.x, size.y, size.z)
+        const scale = 3 / maxDim
+        model.scale.multiplyScalar(scale)
+
+        // Center the model
+        model.position.x = -center.x * scale
+        model.position.y = -center.y * scale
+        model.position.z = -center.z * scale
+
+        setLoading(false)
+
+        // Animation loop с оптимизацией
+        let lastTime = 0
+        const targetFPS = 60
+        const frameInterval = 1000 / targetFPS
+
+        const animate = (currentTime: number) => {
+          animationId = requestAnimationFrame(animate)
+
+          const deltaTime = currentTime - lastTime
+
+          if (deltaTime >= frameInterval) {
+            if (model) {
+              model.rotation.y += 0.005
+              model.rotation.x = Math.sin(currentTime * 0.0003) * 0.1
+            }
+
+            renderer.render(scene, camera)
+            lastTime = currentTime
+          }
+        }
+
+        animationId = requestAnimationFrame(animate)
+      },
+      (progress) => {
+        // Progress callback
+        console.log("Loading progress:", (progress.loaded / progress.total) * 100 + "%")
+      },
+      (error) => {
+        console.error("Error loading model:", error)
+        setError("Ошибка загрузки модели")
+        setLoading(false)
+      }
+    )
 
     // Handle window resize
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight
+      if (!containerRef.current) return
+      const width = containerRef.current.clientWidth
+      const height = containerRef.current.clientHeight
+      camera.aspect = width / height
       camera.updateProjectionMatrix()
-      renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setSize(width, height)
     }
 
     window.addEventListener("resize", handleResize)
 
     return () => {
       window.removeEventListener("resize", handleResize)
-      cancelAnimationFrame(animationId)
+      if (animationId) {
+        cancelAnimationFrame(animationId)
+      }
       renderer.dispose()
       if (containerRef.current && renderer.domElement.parentNode === containerRef.current) {
         containerRef.current.removeChild(renderer.domElement)
@@ -102,5 +126,24 @@ export default function ThreeDHookah() {
     }
   }, [])
 
-  return <div ref={containerRef} className="w-full h-screen" />
+  return (
+    <div ref={containerRef} className="w-full h-full relative">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+          <div className="text-center">
+            <div className="text-2xl mb-2">⏳</div>
+            <p className="text-sm text-muted-foreground">Загрузка модели...</p>
+          </div>
+        </div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+          <div className="text-center">
+            <div className="text-2xl mb-2">❌</div>
+            <p className="text-sm text-red-500">{error}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }

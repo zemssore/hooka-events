@@ -1,56 +1,69 @@
 "use client"
 
+import { useRef, useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { CheckCircle, Zap, Layers, Users, Star, Sparkles } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import Image from "next/image"
 
-const advantages = [
-  {
-    icon: CheckCircle,
-    title: "Полное сопровождение “под ключ”",
-    description:
-      "Мы берём на себя всё — от предоставления оборудования и табаков до оформления зоны и обслуживания гостей. Клиенту остаётся только наслаждаться атмосферой.",
-    color: "text-accent",
-  },
-  {
-    icon: Star,
-    title: "Премиальное качество без компромиссов",
-    description:
-      "Только проверенные табаки (Musthave, Darkside, Sebero и др.), чистые кальяны, идеальные чаши на фруктах и персонал, прошедший профессиональное обучение.",
-    color: "text-accent",
-  },
-  {
-    icon: Layers,
-    title: "Гибкость под любой формат",
-    description:
-      "Корпоратив, свадьба, день рождения, конференция, съёмка или вечеринка — мы адаптируемся под любую концепцию и масштаб мероприятия без потери качества.",
-    color: "text-accent",
-  },
-  {
-    icon: Users,
-    title: "Работаем под вашим брендом",
-    description:
-      "Можем выступать от лица вашей площадки, кейтеринга или агентства — клиент видит только безупречный результат.",
-    color: "text-accent",
-  },
-  {
-    icon: Zap,
-    title: "Опытные мастера и единые стандарты",
-    description:
-      "Каждый кальянщик Hookah Events — это не просто исполнитель, а представитель атмосферы бренда. Мы гарантируем стабильное качество на каждом мероприятии.",
-    color: "text-accent",
-  },
-  {
-    icon: Sparkles,
-    title: "Атмосфера, которую запоминают",
-    description:
-      "Кальянная зона становится точкой притяжения гостей. Мы создаём не просто дым, а комфорт, стиль и эмоции, за которые вас будут благодарить.",
-    color: "text-accent",
-  },
-]
+interface Hookah {
+  id: number
+  name: string
+  description: string
+  image: string
+}
 
 export default function Advantages() {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
+  const [hookahs, setHookahs] = useState<Hookah[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    loadHookahs()
+  }, [])
+
+  const loadHookahs = async () => {
+    try {
+      const res = await fetch("/api/hookahs")
+      const data = await res.json()
+      setHookahs(data || [])
+    } catch (error) {
+      console.error("Error loading hookahs:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+      setCanScrollLeft(scrollLeft > 0)
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+    }
+  }
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const cardWidth = 380 // Ширина карточки + gap
+      const currentScroll = scrollRef.current.scrollLeft
+      const newScroll = direction === "left" ? currentScroll - cardWidth : currentScroll + cardWidth
+      scrollRef.current.scrollTo({ left: newScroll, behavior: "smooth" })
+      setTimeout(checkScroll, 300)
+    }
+  }
+
+  useEffect(() => {
+    checkScroll()
+    const handleResize = () => {
+      setTimeout(checkScroll, 100)
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   return (
-    <section id="advantages" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background">
+    <section id="advantages" className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background w-full max-w-full overflow-x-hidden">
       <div className="container">
         <motion.div
           className="mb-16 text-center"
@@ -59,44 +72,76 @@ export default function Advantages() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="section-title mb-6">Почему мы?</h2>
-          <p className="section-subtitle">Премиальное качество, гибкость и внимание к каждой детали</p>
+          <h2 className="section-title mb-6">Наши кальяны</h2>
+          <p className="section-subtitle">Премиальное оборудование для ваших мероприятий</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {advantages.map((item, idx) => {
-            const Icon = item.icon
-            return (
+        {/* Horizontal Scroll with Buttons - All Screen Sizes */}
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Загрузка кальянов...</p>
+          </div>
+        ) : hookahs.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Кальяны не добавлены</p>
+          </div>
+        ) : (
+          <div className="relative">
+            <div
+              ref={scrollRef}
+              onScroll={checkScroll}
+              className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-1"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+            >
+              {hookahs.map((hookah, idx) => (
               <motion.div
-                key={idx}
-                className="group relative p-6 sm:p-8 rounded-lg bg-card border border-border hover:border-accent/50 transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: idx * 0.15 }}
+                key={hookah.id}
+                className="group relative flex flex-col flex-shrink-0 w-[calc(100vw-4rem)] sm:w-80 md:w-96 rounded-lg bg-card border border-border hover:border-accent/50 transition-all duration-300 overflow-hidden snap-start"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
                 viewport={{ once: true }}
                 whileHover={{
                   y: -8,
-                  boxShadow: "0 20px 40px rgba(255,215,0,0.15)",
-                }}
-                onMouseMove={(e) => {
-                  if (e.currentTarget instanceof HTMLElement) {
-                    const rect = e.currentTarget.getBoundingClientRect()
-                    const x = e.clientX - rect.left
-                    const y = e.clientY - rect.top
-                    e.currentTarget.style.setProperty("--mouse-x", `${x}px`)
-                    e.currentTarget.style.setProperty("--mouse-y", `${y}px`)
-                  }
                 }}
               >
-                <Icon
-                  className={`${item.color} w-10 h-10 sm:w-12 sm:h-12 mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}
-                />
-                <h3 className="text-lg sm:text-xl font-bold text-foreground mb-3 sm:mb-4">{item.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm">{item.description}</p>
+                <div className="relative w-full h-64 sm:h-72 md:h-80 overflow-hidden">
+                  <Image
+                    src={hookah.image || "/placeholder.svg"}
+                    alt={hookah.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-4">{hookah.name}</h3>
+                  <p className="text-muted-foreground leading-relaxed text-sm sm:text-base flex-grow">{hookah.description}</p>
+                </div>
               </motion.div>
-            )
-          })}
-        </div>
+            ))}
+          </div>
+
+          {/* Navigation Buttons */}
+          {canScrollLeft && (
+            <button
+              onClick={() => scroll("left")}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 p-2 sm:p-3 rounded-full bg-background/90 backdrop-blur-sm border border-border hover:border-accent/50 text-foreground hover:text-accent transition-all shadow-lg"
+              aria-label="Прокрутить влево"
+            >
+              <ChevronLeft size={24} className="sm:w-6 sm:h-6" />
+            </button>
+          )}
+          {canScrollRight && (
+            <button
+              onClick={() => scroll("right")}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 p-2 sm:p-3 rounded-full bg-background/90 backdrop-blur-sm border border-border hover:border-accent/50 text-foreground hover:text-accent transition-all shadow-lg"
+              aria-label="Прокрутить вправо"
+            >
+              <ChevronRight size={24} className="sm:w-6 sm:h-6" />
+            </button>
+          )}
+          </div>
+        )}
       </div>
     </section>
   )

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Корпоратив",
+    "image": "/corporate-hookah-event.jpg",
+    "category": "corporate"
+  },
+  {
+    "id": 2,
+    "title": "Свадьба",
+    "image": "/wedding-hookah-lounge.jpg",
+    "category": "wedding"
+  },
+  {
+    "id": 3,
+    "title": "Вечеринка",
+    "image": "/party-hookah-setup.jpg",
+    "category": "party"
+  },
+  {
+    "id": 4,
+    "title": "Конференция",
+    "image": "/conference-hookah-catering.jpg",
+    "category": "corporate"
+  },
+  {
+    "id": 5,
+    "title": "Приватный банкет",
+    "image": "/private-hookah-event.jpg",
+    "category": "wedding"
+  },
+  {
+    "id": 6,
+    "title": "Съёмка",
+    "image": "/film-production-hookah.jpg",
+    "category": "shooting"
+  }
+]

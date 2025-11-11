@@ -2,11 +2,12 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist_Mono } from "next/font/google"
 import "./globals.css"
+import { Providers } from "./providers"
 
 const geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Hookah Events — Кальянный кейтеринг для мероприятий в Москве",
+  title: "Hookah Events — Кальянный Кейтеринг Для Мероприятий В Москве",
   description:
     "Премиальный кальянный кейтеринг под ключ для корпоративов, свадеб, вечеринок и конференций в Москве и области. Оборудование, табак, персонал, обслуживание.",
   keywords: "кальян, кейтеринг, мероприятия, Москва, корпоратив, свадьба, события",
@@ -41,7 +42,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistMono.className} bg-background text-foreground antialiased`}>{children}</body>
+      <body className={`${geistMono.className} bg-background text-foreground antialiased w-full max-w-full overflow-x-hidden`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

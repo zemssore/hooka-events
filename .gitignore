@@ -41,3 +41,7 @@ next-env.d.ts
 # turbo
 .turbo/
 .cache/
+
+# uploads (except .gitkeep)
+public/uploads/*
+!public/uploads/.gitkeep

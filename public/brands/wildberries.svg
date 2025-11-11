@@ -1,0 +1,5 @@
+<svg width="200" height="80" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="80" fill="#fff" stroke="#e5e5e5" stroke-width="1" rx="4"/>
+  <text x="100" y="45" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#a1d214" text-anchor="middle">Wildberries</text>
+</svg>
+

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Мастер 1",
+    "role": "Кальянщик",
+    "image": "/placeholder-user.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Мастер 2",
+    "role": "Кальянщик",
+    "image": "/placeholder-user.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Мастер 3",
+    "role": "Кальянщик",
+    "image": "/placeholder-user.jpg"
+  },
+  {
+    "id": 4,
+    "name": "фыв",
+    "role": "фыв",
+    "image": "/placeholder-user.jpg"
+  }
+]

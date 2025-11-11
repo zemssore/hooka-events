@@ -24,40 +24,52 @@ export default function AnimatedBackground() {
       opacity: number
     }> = []
 
-    // Генерируем частицы
-    for (let i = 0; i < 50; i++) {
+    // Генерируем меньше частиц для лучшей производительности
+    const particleCount = Math.min(30, Math.floor((canvas.width * canvas.height) / 50000))
+    for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         size: Math.random() * 2 + 1,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        opacity: Math.random() * 0.5 + 0.1,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        opacity: Math.random() * 0.3 + 0.1,
       })
     }
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      // Графитовый цвет в RGB (приблизительно oklch(0.3 0 0))
-      ctx.fillStyle = "rgba(80, 80, 80, 0.03)"
+    let animationFrameId: number
+    let lastTime = 0
+    const targetFPS = 30
+    const frameInterval = 1000 / targetFPS
 
-      particles.forEach((particle) => {
-        particle.x += particle.speedX
-        particle.y += particle.speedY
+    const animate = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime
 
-        // Отскок от края
-        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
-        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
+      if (deltaTime >= frameInterval) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        // Графитовый цвет в RGB (приблизительно oklch(0.3 0 0))
+        ctx.fillStyle = "rgba(80, 80, 80, 0.03)"
 
-        ctx.globalAlpha = particle.opacity
-        ctx.fillRect(particle.x, particle.y, particle.size, particle.size)
-      })
+        particles.forEach((particle) => {
+          particle.x += particle.speedX
+          particle.y += particle.speedY
 
-      ctx.globalAlpha = 1
-      requestAnimationFrame(animate)
+          // Отскок от края
+          if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
+          if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
+
+          ctx.globalAlpha = particle.opacity
+          ctx.fillRect(particle.x, particle.y, particle.size, particle.size)
+        })
+
+        ctx.globalAlpha = 1
+        lastTime = currentTime
+      }
+
+      animationFrameId = requestAnimationFrame(animate)
     }
 
-    animate()
+    animationFrameId = requestAnimationFrame(animate)
 
     // Обновляем размер canvas при изменении окна
     const handleResize = () => {
@@ -65,9 +77,21 @@ export default function AnimatedBackground() {
       canvas.height = window.innerHeight
     }
 
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    let resizeTimeout: NodeJS.Timeout
+    const throttledResize = () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(handleResize, 250)
+    }
+
+    window.addEventListener("resize", throttledResize)
+    return () => {
+      window.removeEventListener("resize", throttledResize)
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
+      clearTimeout(resizeTimeout)
+    }
   }, [])
 
-  return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-30 z-0" />
+  return <canvas ref={canvasRef} className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-30 z-0" style={{ willChange: 'transform' }} />
 }
